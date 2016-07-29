@@ -939,13 +939,7 @@ void Sprite::setFlippedX(bool flippedX)
     if (_flippedX != flippedX)
     {
         _flippedX = flippedX;
-        for (ssize_t i = 0; i < _polyInfo.triangles.vertCount; i++) {
-            auto& v = _polyInfo.triangles.verts[i].vertices;
-            v.x = _contentSize.width -v.x;
-        }
-        if (_textureAtlas) {
-            setDirty(true);
-        }
+        flipX();
     }
 }
 
@@ -959,19 +953,33 @@ void Sprite::setFlippedY(bool flippedY)
     if (_flippedY != flippedY)
     {
         _flippedY = flippedY;
-        for (ssize_t i = 0; i < _polyInfo.triangles.vertCount; i++) {
-            auto& v = _polyInfo.triangles.verts[i].vertices;
-            v.y = _contentSize.height -v.y;
-        }
-        if (_textureAtlas) {
-            setDirty(true);
-        }
+        flipY();
     }
 }
 
 bool Sprite::isFlippedY(void) const
 {
     return _flippedY;
+}
+
+void Sprite::flipX() {
+    for (ssize_t i = 0; i < _polyInfo.triangles.vertCount; i++) {
+        auto& v = _polyInfo.triangles.verts[i].vertices;
+        v.x = _contentSize.width -v.x;
+    }
+    if (_textureAtlas) {
+        setDirty(true);
+    }
+}
+
+void Sprite::flipY() {
+    for (ssize_t i = 0; i < _polyInfo.triangles.vertCount; i++) {
+        auto& v = _polyInfo.triangles.verts[i].vertices;
+        v.y = _contentSize.height -v.y;
+    }
+    if (_textureAtlas) {
+        setDirty(true);
+    }
 }
 
 //
@@ -1071,6 +1079,9 @@ void Sprite::setSpriteFrame(SpriteFrame *spriteFrame)
     if(spriteFrame->hasPolygonInfo())
     {
         _polyInfo = spriteFrame->getPolygonInfo();
+        if (_flippedX) flipX();
+        if (_flippedY) flipY();
+        updateColor();
     }
     if (spriteFrame->hasAnchorPoint())
     {

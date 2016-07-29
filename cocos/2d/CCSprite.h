@@ -589,7 +589,8 @@ protected:
     virtual void updateBlendFunc();
     virtual void setReorderChildDirtyRecursively();
     virtual void setDirtyRecursively(bool value);
-
+    virtual void flipX();
+    virtual void flipY();
 
     
     //
