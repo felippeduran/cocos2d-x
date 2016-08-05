@@ -574,6 +574,28 @@ void DrawNode::drawCircle(const Vec2& center, float radius, float angle, unsigne
     CC_SAFE_DELETE_ARRAY(vertices);
 }
 
+void DrawNode::drawCircle(const Vec2& center, float radius, float angle, unsigned int segments, float scaleX, float scaleY, const Color4F &fillColor, float borderWidth, const cocos2d::Color4F &borderColor)
+{
+    const float coef = 2.0f * (float)M_PI/segments;
+    
+    Vec2 *vertices = new (std::nothrow) Vec2[segments];
+    if( ! vertices )
+        return;
+    
+    for(unsigned int i = 0; i < segments; i++) {
+        float rads = i*coef;
+        GLfloat j = radius * cosf(rads + angle) * scaleX + center.x;
+        GLfloat k = radius * sinf(rads + angle) * scaleY + center.y;
+        
+        vertices[i].x = j;
+        vertices[i].y = k;
+    }
+    
+    drawPolygon(vertices, segments, fillColor, borderWidth, borderColor);
+    
+    CC_SAFE_DELETE_ARRAY(vertices);
+}
+
 void DrawNode::drawCircle(const Vec2 &center, float radius, float angle, unsigned int segments, bool drawLineToCenter, const Color4F &color)
 {
     drawCircle(center, radius, angle, segments, drawLineToCenter, 1.0f, 1.0f, color);
