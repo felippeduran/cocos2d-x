@@ -135,6 +135,20 @@ public:
      * @param radius The circle rotate of radius.
      * @param angle  The circle angle.
      * @param segments The number of segments.
+     * @param scaleX The scale value in x.
+     * @param scaleY The scale value in y.
+     * @param fillColor The color will fill in circle.
+     * @param borderWidth The border of line width.
+     * @param borderColor The border of line color.
+     */
+    void drawCircle(const Vec2& center, float radius, float angle, unsigned int segments, float scaleX, float scaleY, const Color4F &fillColor, float borderWidth, const Color4F &borderColor);
+    
+    /** Draws a circle given the center, radius and number of segments.
+     *
+     * @param center The circle center point.
+     * @param radius The circle rotate of radius.
+     * @param angle  The circle angle.
+     * @param segments The number of segments.
      * @param drawLineToCenter Whether or not draw the line from the origin to center.
      * @param color Set the circle color.
      */

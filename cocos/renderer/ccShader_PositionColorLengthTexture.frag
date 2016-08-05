@@ -31,12 +31,28 @@ varying vec4 v_color;
 varying vec2 v_texcoord;
 #endif
 
+float sstep(float a, float b, float x);
+float saturate(float x);
+
 void main()
 {
 // #if defined GL_OES_standard_derivatives
-// gl_FragColor = v_color*smoothstep(0.0, length(fwidth(v_texcoord)), 1.0 - length(v_texcoord));
+ gl_FragColor = v_color*sstep(0.0, length(v_texcoord), 1.0 - length(v_texcoord));
 // #else
-    gl_FragColor = v_color*step(0.0, 1.0 - length(v_texcoord));
+//    gl_FragColor = v_color*step(0.0, 1.0 - length(v_texcoord));
 // #endif
 }
+
+float sstep(float a, float b, float x)
+{
+    // Implementation is taken from here: http://http.developer.nvidia.com/Cg/smoothstep.html
+    float t = saturate((x - a)/(b - a));
+    return t*t*(3.0 - (2.0*t));
+}
+
+float saturate(float x)
+{
+    return max(0.0, min(1.0, x));
+}
+
 )";
