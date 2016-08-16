@@ -27,6 +27,7 @@ THE SOFTWARE.
 #include "2d/CCLabel.h"
 #include "2d/CCSprite.h"
 #include "2d/CCActionInterval.h"
+#include "2d/CCActionEase.h"
 #include "platform/CCFileUtils.h"
 #include "ui/UIHelper.h"
 #include <algorithm>
@@ -49,7 +50,7 @@ _buttonNormalRenderer(nullptr),
 _buttonClickedRenderer(nullptr),
 _buttonDisabledRenderer(nullptr),
 _titleRenderer(nullptr),
-_zoomScale(0.1f),
+_zoomScale(-0.1f),
 _normalFileName(""),
 _clickedFileName(""),
 _disabledFileName(""),
@@ -472,14 +473,19 @@ void Button::onPressStateChangedToNormal()
     else
     {
         _buttonNormalRenderer->stopAllActions();
-        _buttonNormalRenderer->setScale(1.0);
+//        _buttonNormalRenderer->setScale(1.0);
+        
+        Action *zoomAction = EaseBackOut::create(ScaleTo::create(0.2,
+                                                                 1.0,
+                                                                 1.0));
+        runAction(zoomAction);
 
-        if(nullptr != _titleRenderer)
-        {
-            _titleRenderer->stopAllActions();
-            _titleRenderer->setScaleX(1.0f);
-            _titleRenderer->setScaleY(1.0f);
-        }
+//        if(nullptr != _titleRenderer)
+//        {
+//            _titleRenderer->stopAllActions();
+//            _titleRenderer->setScaleX(1.0f);
+//            _titleRenderer->setScaleY(1.0f);
+//        }
 
     }
 }
@@ -498,7 +504,7 @@ void Button::onPressStateChangedToPressed()
         {
             _buttonNormalRenderer->stopAllActions();
             _buttonClickedRenderer->stopAllActions();
-
+            
             Action *zoomAction = ScaleTo::create(ZOOM_ACTION_TIME_STEP,
                                                  1.0 + _zoomScale,
                                                  1.0 + _zoomScale);
@@ -506,6 +512,7 @@ void Button::onPressStateChangedToPressed()
 
             _buttonNormalRenderer->setScale(1.0 + _zoomScale,
                                             1.0 + _zoomScale);
+            runAction(zoomAction);
 
             if(nullptr != _titleRenderer)
             {
@@ -523,14 +530,19 @@ void Button::onPressStateChangedToPressed()
         _buttonDisabledRenderer->setVisible(false);
 
         _buttonNormalRenderer->stopAllActions();
-        _buttonNormalRenderer->setScale(1.0 +_zoomScale, 1.0 + _zoomScale);
+//        _buttonNormalRenderer->setScale(1.0 +_zoomScale, 1.0 + _zoomScale);
+        
+        Action *zoomAction = EaseBackOut::create(ScaleTo::create(0.2,
+                                                                 1.0 + _zoomScale,
+                                                                 1.0 + _zoomScale));
+        runAction(zoomAction);
 
-        if(nullptr != _titleRenderer)
-        {
-            _titleRenderer->stopAllActions();
-            _titleRenderer->setScaleX(1.0f + _zoomScale);
-            _titleRenderer->setScaleY(1.0f + _zoomScale);
-        }
+//        if(nullptr != _titleRenderer)
+//        {
+//            _titleRenderer->stopAllActions();
+//            _titleRenderer->setScaleX(1.0f + _zoomScale);
+//            _titleRenderer->setScaleY(1.0f + _zoomScale);
+//        }
     }
 }
 
