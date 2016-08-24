@@ -266,6 +266,13 @@ void Director::setGLDefaultValues()
     glViewport(vp._left, vp._bottom, vp._width, vp._height);
 }
 
+Scene* Director::previousScene(void) {
+    unsigned int c = _scenesStack.size();
+    
+    if (c <= 1) return NULL;
+    return (Scene *) _scenesStack.at(c - 2);
+}
+
 // Draw the Scene
 void Director::drawScene()
 {
@@ -884,6 +891,21 @@ void Director::popScene(void)
     {
         _sendCleanupToScene = true;
         _nextScene = _scenesStack.at(c - 1);
+    }
+}
+
+void Director::popScene(Scene *trans) {
+    CCAssert(_runningScene != NULL, "running scene should not null");
+    _scenesStack.popBack();
+    unsigned int c = _scenesStack.size();
+    
+    if (c == 0) {
+        end();
+    }
+    else {
+        
+        _sendCleanupToScene = true;
+        _nextScene = trans;
     }
 }
 
