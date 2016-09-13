@@ -55,6 +55,7 @@ THE SOFTWARE.
 #include "base/ccUTF8.h"
 #include "renderer/CCTextureCache.h"
 #include "platform/CCFileUtils.h"
+#include "CCSpriteFrameCache.h"
 
 using namespace std;
 
@@ -220,6 +221,7 @@ ParticleSystem::ParticleSystem()
 , _yCoordFlipped(1)
 , _positionType(PositionType::FREE)
 , _paused(false)
+, _spriteFrame(nullptr)
 {
     modeA.gravity.setZero();
     modeA.speed = 0;
@@ -474,7 +476,16 @@ bool ParticleSystem::initWithDictionary(ValueMap& dictionary, const std::string&
                 
                 Texture2D *tex = nullptr;
                 
-                if (!textureName.empty())
+                if (!textureName.empty()) {
+                    SpriteFrameCache *frameCache = SpriteFrameCache::getInstance();
+                    _spriteFrame = frameCache->getSpriteFrameByName(textureName);
+                    if ( _spriteFrame )
+                    {
+                        tex = _spriteFrame->getTexture();
+                    }
+                }
+                
+                if (!tex && !textureName.empty())
                 {
                     // set not pop-up message box when load image failed
                     bool notify = FileUtils::getInstance()->isPopupNotify();

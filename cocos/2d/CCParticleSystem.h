@@ -970,6 +970,8 @@ protected:
     
     /** is the emitter paused */
     bool _paused;
+    
+    SpriteFrame *_spriteFrame;
 
 private:
     CC_DISALLOW_COPY_AND_ASSIGN(ParticleSystem);
