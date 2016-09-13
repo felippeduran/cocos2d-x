@@ -76,6 +76,7 @@ ParticleSystemQuad * ParticleSystemQuad::create(const std::string& filename)
     if (ret && ret->initWithFile(filename))
     {
         ret->autorelease();
+        if (ret->_spriteFrame) ret->initTexCoordsWithRect(ret->_spriteFrame->getRect());
         return ret;
     }
     CC_SAFE_DELETE(ret);
@@ -87,6 +88,7 @@ ParticleSystemQuad * ParticleSystemQuad::createWithTotalParticles(int numberOfPa
     if (ret && ret->initWithTotalParticles(numberOfParticles))
     {
         ret->autorelease();
+        if (ret->_spriteFrame) ret->initTexCoordsWithRect(ret->_spriteFrame->getRect());
         return ret;
     }
     CC_SAFE_DELETE(ret);
@@ -99,6 +101,7 @@ ParticleSystemQuad * ParticleSystemQuad::create(ValueMap &dictionary)
     if (ret && ret->initWithDictionary(dictionary))
     {
         ret->autorelease();
+        if (ret->_spriteFrame) ret->initTexCoordsWithRect(ret->_spriteFrame->getRect());
         return ret;
     }
     CC_SAFE_DELETE(ret);
