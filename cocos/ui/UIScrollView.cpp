@@ -32,8 +32,8 @@ THE SOFTWARE.
 NS_CC_BEGIN
 
 static const int NUMBER_OF_GATHERED_TOUCHES_FOR_MOVE_SPEED = 5;
-static const float OUT_OF_BOUNDARY_BREAKING_FACTOR = 0.05f;
-static const float BOUNCE_BACK_DURATION = 1.0f;
+static const float OUT_OF_BOUNDARY_BREAKING_FACTOR = 0.01f;
+static const float BOUNCE_BACK_DURATION = 0.5f;
 
 #define MOVE_INCH            7.0f/160.0f
 
@@ -539,7 +539,7 @@ void ScrollView::processAutoScrolling(float deltaTime)
     if(_autoScrollAttenuate)
     {
         // Use quintic(5th degree) polynomial
-        percentage = tweenfunc::quintEaseOut(percentage);
+        percentage = tweenfunc::expoEaseOut(percentage);
     }
     
     // Calculate the new position
