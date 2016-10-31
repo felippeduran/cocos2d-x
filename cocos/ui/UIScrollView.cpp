@@ -75,7 +75,9 @@ _verticalScrollBar(nullptr),
 _horizontalScrollBar(nullptr),
 _scrollViewEventListener(nullptr),
 _scrollViewEventSelector(nullptr),
-_eventCallback(nullptr)
+_eventCallback(nullptr),
+_strict(false),
+_strictDirection(Direction::NONE)
 {
     setTouchEnabled(true);
     _propagateTouchEvents = false;
@@ -892,7 +894,21 @@ void ScrollView::handleMoveLogic(Touch *touch)
         return;
     }
     Vec3 delta3 = currPt - prevPt;
+
     Vec2 delta(delta3.x, delta3.y);
+    
+    if (_strict) {
+        if (_strictDirection == Direction::NONE) {
+            _strictDirection = fabs(delta.x) > fabs(delta.y) ? Direction::HORIZONTAL : Direction::VERTICAL;
+        }
+        
+        if (_strictDirection == Direction::HORIZONTAL) {
+            delta.y = 0.0;
+        } else if (_strictDirection == Direction::VERTICAL) {
+            delta.x = 0.0;
+        }
+    }
+    
     scrollChildren(delta);
     
     // Gather touch move information for speed calculation
@@ -939,6 +955,8 @@ bool ScrollView::onTouchBegan(Touch *touch, Event *unusedEvent)
     bool pass = Layout::onTouchBegan(touch, unusedEvent);
     if (!_isInterceptTouch)
     {
+        _strictDirection = Direction::NONE;
+        
         if (_hitted)
         {
             handlePressLogic(touch);
@@ -1352,6 +1370,16 @@ void ScrollView::setTouchTotalTimeThreshold(float touchTotalTimeThreshold)
 float ScrollView::getTouchTotalTimeThreshold() const
 {
     return _touchTotalTimeThreshold;
+}
+
+void ScrollView::setStrict(bool strict)
+{
+    _strict = strict;
+}
+    
+bool ScrollView::getStrict() const
+{
+    return _strict;
 }
 
 Layout* ScrollView::getInnerContainer()const

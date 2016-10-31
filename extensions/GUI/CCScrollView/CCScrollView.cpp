@@ -65,6 +65,8 @@ ScrollView::ScrollView()
 , _scissorRestored(false)
 , _touchListener(nullptr)
 , _animatedScrollAction(nullptr)
+, _strict(false)
+, _strictDirection(Direction::NONE)
 {
 
 }
@@ -688,6 +690,8 @@ bool ScrollView::onTouchBegan(Touch* touch, Event* event)
         return false;
     }
     
+    _strictDirection = Direction::NONE;
+    
     Rect frame = getViewRect();
 
     //dispatcher does not know about clipping. reject touches outside visible bounds.
@@ -743,6 +747,18 @@ void ScrollView::onTouchMoved(Touch* touch, Event* event)
 
             newPoint     = this->convertTouchToNodeSpace(_touches[0]);
             moveDistance = newPoint - _touchPoint;
+            
+            if (_strict) {
+                if (_strictDirection == Direction::NONE) {
+                    _strictDirection = fabs(moveDistance.x) > fabs(moveDistance.y) ? Direction::HORIZONTAL : Direction::VERTICAL;
+                }
+                
+                if (_strictDirection == Direction::HORIZONTAL) {
+                    moveDistance.y = 0.0;
+                } else if (_strictDirection == Direction::VERTICAL) {
+                    moveDistance.x = 0.0;
+                }
+            }
             
             float dis = 0.0f;
             if (_direction == Direction::VERTICAL)

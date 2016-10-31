@@ -200,6 +200,8 @@ public:
     bool isTouchMoved() const { return _touchMoved; }
     bool isBounceable() const { return _bounceable; }
     void setBounceable(bool bBounceable) { _bounceable = bBounceable; }
+    bool isStrict() const { return _strict; }
+    void setStrict(bool strict) { _strict = strict; }
 
     /**
      * size to clip. Node boundingBox uses contentSize directly.
@@ -387,6 +389,9 @@ protected:
      * Action created with setContentOffsetInDuration(), saved so it can be halted
      */
     Action* _animatedScrollAction;
+    
+    Direction _strictDirection;
+    bool _strict;
 };
 
 

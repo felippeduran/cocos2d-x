@@ -527,6 +527,20 @@ public:
     float getTouchTotalTimeThreshold() const;
     
     /**
+     * @brief Set the strict scroll direction status
+     *
+     * @param the strict scroll direction status
+     */
+    void setStrict(bool strict);
+    
+    /**
+     * @brief Get the strict scroll direction status
+     *
+     * @return the strict scroll direction status
+     */
+    bool getStrict() const;
+    
+    /**
      * Set layout type for scrollview.
      *
      * @see `Layout::Type`
@@ -680,6 +694,9 @@ protected:
 #pragma warning (pop)
 #endif
     ccScrollViewCallback _eventCallback;
+    
+    Direction _strictDirection;
+    bool _strict;
 };
 
 }
