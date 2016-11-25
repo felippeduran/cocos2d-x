@@ -845,64 +845,67 @@ namespace cocostudio
             button->setTitleText(titleText);
         }
         
-        auto textColor = options->textColor();
-        Color3B titleColor(textColor->r(), textColor->g(), textColor->b());
-        button->setTitleColor(titleColor);
-        
-        int titleFontSize = options->fontSize();
-        button->setTitleFontSize(titleFontSize);
-        
-        std::string titleFontName = options->fontName()->c_str();
-        button->setTitleFontName(titleFontName);
-        
-        auto resourceData = options->fontResource();
-        bool fileExist = false;
-        std::string errorFilePath = "";
-        std::string path = resourceData->path()->c_str();
-        if (path != "")
-        {
-            if (FileUtils::getInstance()->isFileExist(path))
+        if (!button->getTitleText().empty()) {
+            auto textColor = options->textColor();
+            Color3B titleColor(textColor->r(), textColor->g(), textColor->b());
+            button->setTitleColor(titleColor);
+            
+            int titleFontSize = options->fontSize();
+            button->setTitleFontSize(titleFontSize);
+            
+            std::string titleFontName = options->fontName()->c_str();
+            button->setTitleFontName(titleFontName);
+            
+            auto resourceData = options->fontResource();
+            bool fileExist = false;
+            std::string errorFilePath = "";
+            std::string path = resourceData->path()->c_str();
+            if (path != "")
             {
-                fileExist = true;
+                if (FileUtils::getInstance()->isFileExist(path))
+                {
+                    fileExist = true;
+                }
+                else
+                {
+                    errorFilePath = path;
+                    fileExist = false;
+                }
+                if (fileExist)
+                {
+                    button->setTitleFontName(path);
+                }
             }
-            else
+            
+            bool outlineEnabled = options->outlineEnabled() != 0;
+            if (outlineEnabled)
             {
-                errorFilePath = path;
-                fileExist = false;
+                auto f_outlineColor = options->outlineColor();
+                if (f_outlineColor)
+                {
+                    Color4B outlineColor(f_outlineColor->r(), f_outlineColor->g(), f_outlineColor->b(), f_outlineColor->a());
+                    auto label = button->getTitleRenderer();
+                    label->enableOutline(outlineColor, options->outlineSize());
+                }
             }
-            if (fileExist)
+            
+            bool shadowEnabled = options->shadowEnabled() != 0;
+            if (shadowEnabled)
             {
-                button->setTitleFontName(path);
+                auto f_shadowColor = options->shadowColor();
+                if (f_shadowColor)
+                {
+                    Color4B shadowColor(f_shadowColor->r(), f_shadowColor->g(), f_shadowColor->b(), f_shadowColor->a());
+                    auto label = button->getTitleRenderer();
+                    label->enableShadow(shadowColor, Size(options->shadowOffsetX(), options->shadowOffsetY()), options->shadowBlurRadius());
+                }
             }
         }
+        
         
         bool displaystate = options->displaystate() != 0;
         button->setBright(displaystate);
         button->setEnabled(displaystate);
-        
-        bool outlineEnabled = options->outlineEnabled() != 0;
-        if (outlineEnabled)
-        {
-            auto f_outlineColor = options->outlineColor();
-            if (f_outlineColor)
-            {
-                Color4B outlineColor(f_outlineColor->r(), f_outlineColor->g(), f_outlineColor->b(), f_outlineColor->a());
-                auto label = button->getTitleRenderer();
-                label->enableOutline(outlineColor, options->outlineSize());
-            }
-        }
-        
-        bool shadowEnabled = options->shadowEnabled() != 0;
-        if (shadowEnabled)
-        {
-            auto f_shadowColor = options->shadowColor();
-            if (f_shadowColor)
-            {
-                Color4B shadowColor(f_shadowColor->r(), f_shadowColor->g(), f_shadowColor->b(), f_shadowColor->a());
-                auto label = button->getTitleRenderer();
-                label->enableShadow(shadowColor, Size(options->shadowOffsetX(), options->shadowOffsetY()), options->shadowBlurRadius());
-            }
-        }
         
         auto widgetReader = WidgetReader::getInstance();
         widgetReader->setPropsWithFlatBuffers(node, (Table*)options->widgetOptions());
