@@ -233,7 +233,9 @@ void PageView::refreshIndicatorPosition()
 
 void PageView::handlePressLogic(Touch *touch)
 {
+    auto persistAutoScroll = _autoScrolling;
     ListView::handlePressLogic(touch);
+    _autoScrolling = persistAutoScroll;
     if (!_isTouchBegin) {
         _currentPageIndex = getIndex(getCenterItemInCurrentView());
         _previousPageIndex = _currentPageIndex;
@@ -246,6 +248,15 @@ void PageView::handleReleaseLogic(Touch *touch)
     // Use `ScrollView` method in order to avoid `startMagneticScroll()` by `ListView`.
     ScrollView::handleReleaseLogic(touch);
 
+    if (_strict) {
+        if (ScrollView::_strictDirection != _direction) {
+            ScrollView::_strictDirection = Direction::NONE;
+            startMagneticScroll();
+            return;
+        }
+        ScrollView::_strictDirection = Direction::NONE;
+    }
+    
     if(_items.empty())
     {
         return;

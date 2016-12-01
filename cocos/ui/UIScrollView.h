@@ -608,6 +608,7 @@ protected:
     virtual void moveInnerContainer(const Vec2& deltaMove, bool canStartBounceBack);
 
     bool calculateCurrAndPrevTouchPoints(Touch* touch, Vec3* currPt, Vec3* prevPt);
+    bool calculateCurrAndInitialTouchPoints(Touch* touch, Vec3* currPt, Vec3* initPt);
     void gatherTouchMove(const Vec2& delta);
     Vec2 calculateTouchMoveVelocity() const;
     

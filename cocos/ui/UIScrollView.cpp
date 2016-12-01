@@ -849,6 +849,17 @@ bool ScrollView::calculateCurrAndPrevTouchPoints(Touch* touch, Vec3* currPt, Vec
     return true;
 }
 
+bool ScrollView::calculateCurrAndInitialTouchPoints(Touch* touch, Vec3* currPt, Vec3* initPt)
+{
+    if (nullptr == _hittedByCamera ||
+        false == hitTest(touch->getLocation(), _hittedByCamera, currPt) ||
+        false == hitTest(touch->getStartLocation(), _hittedByCamera, initPt))
+    {
+        return false;
+    }
+    return true;
+}
+    
 void ScrollView::gatherTouchMove(const Vec2& delta)
 {
     while(_touchMoveDisplacements.size() >= NUMBER_OF_GATHERED_TOUCHES_FOR_MOVE_SPEED)
@@ -889,7 +900,7 @@ ScrollView::Direction ScrollView::_strictDirection = ScrollView::Direction::NONE
     
 void ScrollView::handleMoveLogic(Touch *touch)
 {
-    Vec3 currPt, prevPt;
+    Vec3 currPt, prevPt, initPt;
     if(!calculateCurrAndPrevTouchPoints(touch, &currPt, &prevPt))
     {
         return;
@@ -899,14 +910,25 @@ void ScrollView::handleMoveLogic(Touch *touch)
     Vec2 delta(delta3.x, delta3.y);
     
     if (_strict) {
+        if(!calculateCurrAndInitialTouchPoints(touch, &currPt, &initPt)) return;
+        Vec3 totalDelta3 = currPt - initPt;
+        Vec2 totalDelta(totalDelta3.x, totalDelta3.y);
+        
         if (ScrollView::_strictDirection == Direction::NONE) {
-            ScrollView::_strictDirection = fabs(delta.x) > fabs(delta.y) ? Direction::HORIZONTAL : Direction::VERTICAL;
+            if (fabs(totalDelta.y) > 35) {
+                ScrollView::_strictDirection = Direction::VERTICAL;
+            } else if (fabs(totalDelta.x) > 70) {
+                ScrollView::_strictDirection = Direction::HORIZONTAL;
+            }
         }
         
         if (ScrollView::_strictDirection == Direction::HORIZONTAL) {
             delta.y = 0.0;
         } else if (ScrollView::_strictDirection == Direction::VERTICAL) {
             delta.x = 0.0;
+        } else {
+            delta.x = 0.0;
+            delta.y = 0.0;
         }
     }
     
@@ -956,8 +978,6 @@ bool ScrollView::onTouchBegan(Touch *touch, Event *unusedEvent)
     bool pass = Layout::onTouchBegan(touch, unusedEvent);
     if (!_isInterceptTouch)
     {
-        ScrollView::_strictDirection = Direction::NONE;
-        
         if (_hitted)
         {
             handlePressLogic(touch);
