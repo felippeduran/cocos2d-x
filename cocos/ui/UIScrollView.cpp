@@ -76,8 +76,7 @@ _horizontalScrollBar(nullptr),
 _scrollViewEventListener(nullptr),
 _scrollViewEventSelector(nullptr),
 _eventCallback(nullptr),
-_strict(false),
-_strictDirection(Direction::NONE)
+_strict(false)
 {
     setTouchEnabled(true);
     _propagateTouchEvents = false;
@@ -886,6 +885,8 @@ void ScrollView::handlePressLogic(Touch *touch)
     }
 }
 
+ScrollView::Direction ScrollView::_strictDirection = ScrollView::Direction::NONE;
+    
 void ScrollView::handleMoveLogic(Touch *touch)
 {
     Vec3 currPt, prevPt;
@@ -898,13 +899,13 @@ void ScrollView::handleMoveLogic(Touch *touch)
     Vec2 delta(delta3.x, delta3.y);
     
     if (_strict) {
-        if (_strictDirection == Direction::NONE) {
-            _strictDirection = fabs(delta.x) > fabs(delta.y) ? Direction::HORIZONTAL : Direction::VERTICAL;
+        if (ScrollView::_strictDirection == Direction::NONE) {
+            ScrollView::_strictDirection = fabs(delta.x) > fabs(delta.y) ? Direction::HORIZONTAL : Direction::VERTICAL;
         }
         
-        if (_strictDirection == Direction::HORIZONTAL) {
+        if (ScrollView::_strictDirection == Direction::HORIZONTAL) {
             delta.y = 0.0;
-        } else if (_strictDirection == Direction::VERTICAL) {
+        } else if (ScrollView::_strictDirection == Direction::VERTICAL) {
             delta.x = 0.0;
         }
     }
@@ -955,7 +956,7 @@ bool ScrollView::onTouchBegan(Touch *touch, Event *unusedEvent)
     bool pass = Layout::onTouchBegan(touch, unusedEvent);
     if (!_isInterceptTouch)
     {
-        _strictDirection = Direction::NONE;
+        ScrollView::_strictDirection = Direction::NONE;
         
         if (_hitted)
         {

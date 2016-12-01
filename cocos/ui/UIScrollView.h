@@ -695,7 +695,7 @@ protected:
 #endif
     ccScrollViewCallback _eventCallback;
     
-    Direction _strictDirection;
+    static Direction _strictDirection;
     bool _strict;
 };
 
