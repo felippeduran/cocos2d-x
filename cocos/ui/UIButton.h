@@ -186,6 +186,41 @@ public:
      * @param enabled Set to true will enable zoom effect, false otherwise.
      */
     void setPressedActionEnabled(bool enabled);
+    
+    /**
+     * Set default value for _pressedActionEnabled when Button is created.
+     *
+     * @param enabled Set to true will enable zoom effect, false otherwise.
+     */
+    static void setDefaultPressedActionEnabled(bool enabled);
+    
+    /**
+     * Set custom action when button state changes to normal.
+     *
+     * @param action Custom action. If set to null, default zooming action will be used.
+     */
+    void setButtonStateChangeToNormal(Action *action);
+    
+    /**
+     * Set custom action when button is pressed.
+     *
+     * @param action Custom action. If set to null, default zooming action will be used.
+     */
+    void setButtonStateChangeToPressed(Action *action);
+    
+    /**
+     * Set default action for _defaultStateChangeToNormalAction when button is created.
+     *
+     * @param action Custom action. If set to null, default zooming action will be used.
+     */
+    static void setDefaultStateChangeToNormalAction(Action *action);
+    
+    /**
+     * Set default action for _defaultStateChangeToPressedAction when button is created.
+     *
+     * @param action Custom action. If set to null, default zooming action will be used.
+     */
+    static void setDefaultStateChangeToPressedAction(Action *action);
 
     //override methods
     virtual void ignoreContentAdaptWithSize(bool ignore) override;
@@ -345,6 +380,8 @@ protected:
     Scale9Sprite* _buttonNormalRenderer;
     Scale9Sprite* _buttonClickedRenderer;
     Scale9Sprite* _buttonDisabledRenderer;
+    Action* _buttonStateChangeToNormalAction;
+    Action* _buttonStateChangeToPressedAction;
     Label* _titleRenderer;
 
     float _zoomScale;
