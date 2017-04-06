@@ -82,8 +82,9 @@ _fontSize(10),
 _type(FontType::SYSTEM)
 {
     setTouchEnabled(true);
-    setButtonStateChangeToNormal(defaultStateChangeToNormalAction->clone());
-    setButtonStateChangeToPressed(defaultStateChangeToPressedAction->clone());
+
+    if (defaultStateChangeToNormalAction) setButtonStateChangeToNormal(defaultStateChangeToNormalAction->clone());
+    if (defaultStateChangeToPressedAction) setButtonStateChangeToPressed(defaultStateChangeToPressedAction->clone());
 }
 
 Button::~Button()
