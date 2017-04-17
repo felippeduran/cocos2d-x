@@ -231,6 +231,10 @@ namespace cocos2d {
                 JniHelper::callStaticVoidMethod(className, "setScalesPageToFit", _viewTag, scalesPageToFit);
             }
 
+            void WebViewImpl::setBackgroundColorClear() {
+                JniHelper::callStaticVoidMethod(className, "setBackgroundColor", _viewTag, 0);
+            }
+
             bool WebViewImpl::shouldStartLoading(const int viewTag, const std::string &url) {
                 bool allowLoad = true;
                 auto it = s_WebViewImpls.find(viewTag);

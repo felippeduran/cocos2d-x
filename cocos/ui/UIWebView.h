@@ -152,6 +152,11 @@ public:
      * Set WebView should support zooming. The default value is false.
      */
     void setScalesPageToFit(const bool scalesPageToFit);
+
+    /**
+     * Set WebView transparent.
+     */
+    void setBackgroundColorClear();
     
     /**
      * Call before a web view begins loading.

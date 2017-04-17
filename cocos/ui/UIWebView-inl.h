@@ -133,6 +133,11 @@ namespace experimental{
             _impl->setScalesPageToFit(scalesPageToFit);
         }
 
+        void WebView::setBackgroundColorClear()
+        {
+            _impl->setBackgroundColorClear();
+        }
+
         void WebView::draw(cocos2d::Renderer *renderer, cocos2d::Mat4 const &transform, uint32_t flags)
         {
             cocos2d::ui::Widget::draw(renderer, transform, flags);

@@ -80,6 +80,8 @@ namespace cocos2d {
 
                 void setScalesPageToFit(const bool scalesPageToFit);
 
+                void setBackgroundColorClear();
+
                 virtual void draw(cocos2d::Renderer *renderer, cocos2d::Mat4 const &transform, uint32_t flags);
 
                 virtual void setVisible(bool visible);

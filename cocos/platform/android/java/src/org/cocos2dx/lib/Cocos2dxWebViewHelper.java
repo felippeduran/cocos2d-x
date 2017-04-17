@@ -281,4 +281,16 @@ public class Cocos2dxWebViewHelper {
             }
         });
     }
+
+    public static void setBackgroundColor(final int index, final int color) {
+        sCocos2dxActivity.runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                Cocos2dxWebView webView = webViews.get(index);
+                if (webView != null) {
+                    webView.setBackgroundColor(color);
+                }
+            }
+        });
+    }
 }
