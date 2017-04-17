@@ -501,6 +501,7 @@ namespace cocostudio
         Text* text = Text::create();
         
         setPropsWithFlatBuffers(text, (Table*)textOptions);
+        text->setMaxUnicodeRange(0x017E);
         
         return text;
     }
