@@ -1,18 +1,18 @@
 /****************************************************************************
  Copyright (c) 2014 Chukong Technologies Inc.
- 
+
  http://www.cocos2d-x.org
- 
+
  Permission is hereby granted, free of charge, to any person obtaining a copy
  of this software and associated documentation files (the "Software"), to deal
  in the Software without restriction, including without limitation the rights
  to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
  copies of the Software, and to permit persons to whom the Software is
  furnished to do so, subject to the following conditions:
- 
+
  The above copyright notice and this permission notice shall be included in
  all copies or substantial portions of the Software.
- 
+
  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
  IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
  FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
@@ -46,16 +46,16 @@ static std::string getFixedBaseUrl(const std::string& baseUrl)
     else {
         fixedBaseUrl = baseUrl;
     }
-    
+
     size_t pos = 0;
     while ((pos = fixedBaseUrl.find(" ")) != std::string::npos) {
         fixedBaseUrl.replace(pos, 1, "%20");
     }
-    
+
     if (fixedBaseUrl.at(fixedBaseUrl.length() - 1) != '/') {
         fixedBaseUrl += "/";
     }
-    
+
     return fixedBaseUrl;
 }
 
@@ -97,6 +97,8 @@ static std::string getFixedBaseUrl(const std::string& baseUrl)
 - (void)goForward;
 
 - (void)setScalesPageToFit:(const bool)scalesPageToFit;
+
+- (void)setBackgroundColorClear;
 @end
 
 
@@ -106,7 +108,7 @@ static std::string getFixedBaseUrl(const std::string& baseUrl)
 @end
 
 @implementation UIWebViewWrapper {
-    
+
 }
 
 + (instancetype)webViewWrapper {
@@ -224,6 +226,11 @@ static std::string getFixedBaseUrl(const std::string& baseUrl)
     self.uiWebView.scalesPageToFit = scalesPageToFit;
 }
 
+- (void)setBackgroundColorClear {
+    [self.uiWebView setBackgroundColor:[UIColor clearColor]];
+    [self.uiWebView setOpaque:NO];
+}
+
 #pragma mark - UIWebViewDelegate
 - (BOOL)webView:(UIWebView *)webView shouldStartLoadWithRequest:(NSURLRequest *)request navigationType:(UIWebViewNavigationType)navigationType {
     NSString *url = [[request URL] absoluteString];
@@ -265,7 +272,7 @@ WebViewImpl::WebViewImpl(WebView *webView)
         : _uiWebViewWrapper([UIWebViewWrapper webViewWrapper]),
         _webView(webView) {
     [_uiWebViewWrapper retain];
-            
+
     _uiWebViewWrapper.shouldStartLoading = [this](std::string url) {
         if (this->_webView->_onShouldStartLoading) {
             return this->_webView->_onShouldStartLoading(this->_webView, url);
@@ -302,7 +309,7 @@ void WebViewImpl::loadData(const Data &data,
                            const std::string &MIMEType,
                            const std::string &encoding,
                            const std::string &baseURL) {
-    
+
     std::string dataString(reinterpret_cast<char *>(data.getBytes()), static_cast<unsigned int>(data.getSize()));
     [_uiWebViewWrapper loadData:dataString MIMEType:MIMEType textEncodingName:encoding baseURL:baseURL];
 }
@@ -356,13 +363,17 @@ void WebViewImpl::setScalesPageToFit(const bool scalesPageToFit) {
     [_uiWebViewWrapper setScalesPageToFit:scalesPageToFit];
 }
 
+void WebViewImpl::setBackgroundColorClear(){
+    [_uiWebViewWrapper setBackgroundColorClear];
+}
+
 void WebViewImpl::draw(cocos2d::Renderer *renderer, cocos2d::Mat4 const &transform, uint32_t flags) {
     if (flags & cocos2d::Node::FLAGS_TRANSFORM_DIRTY) {
-        
+
         auto direcrot = cocos2d::Director::getInstance();
         auto glView = direcrot->getOpenGLView();
         auto frameSize = glView->getFrameSize();
-        
+
         auto scaleFactor = [static_cast<CCEAGLView *>(glView->getEAGLView()) contentScaleFactor];
 
         auto winSize = direcrot->getWinSize();
@@ -385,7 +396,7 @@ void WebViewImpl::draw(cocos2d::Renderer *renderer, cocos2d::Mat4 const &transfo
 void WebViewImpl::setVisible(bool visible){
     [_uiWebViewWrapper setVisible:visible];
 }
-        
+
     } // namespace ui
 } // namespace experimental
 } //namespace cocos2d

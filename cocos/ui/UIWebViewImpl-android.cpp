@@ -1,18 +1,18 @@
 /****************************************************************************
  Copyright (c) 2014 Chukong Technologies Inc.
- 
+
  http://www.cocos2d-x.org
- 
+
  Permission is hereby granted, free of charge, to any person obtaining a copy
  of this software and associated documentation files (the "Software"), to deal
  in the Software without restriction, including without limitation the rights
  to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
  copies of the Software, and to permit persons to whom the Software is
  furnished to do so, subject to the following conditions:
- 
+
  The above copyright notice and this permission notice shall be included in
  all copies or substantial portions of the Software.
- 
+
  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
  IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
  FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
@@ -66,11 +66,11 @@ static std::string getFixedBaseUrl(const std::string& baseUrl)
     else {
         fixedBaseUrl = s_sdRootBaseUrl + baseUrl;
     }
-    
+
     if (fixedBaseUrl.c_str()[fixedBaseUrl.length() - 1] != '/') {
         fixedBaseUrl += "/";
     }
-    
+
     return fixedBaseUrl;
 }
 
@@ -227,6 +227,10 @@ namespace cocos2d {
                 JniHelper::callStaticVoidMethod(className, "setScalesPageToFit", _viewTag, scalesPageToFit);
             }
 
+            void WebViewImpl::setBackgroundColorClear() {
+                JniHelper::callStaticVoidMethod(className, "setBackgroundColor", _viewTag, 0);
+            }
+
             bool WebViewImpl::shouldStartLoading(const int viewTag, const std::string &url) {
                 bool allowLoad = true;
                 auto it = s_WebViewImpls.find(viewTag);
@@ -272,7 +276,7 @@ namespace cocos2d {
             void WebViewImpl::draw(cocos2d::Renderer *renderer, cocos2d::Mat4 const &transform, uint32_t flags) {
                 if (flags & cocos2d::Node::FLAGS_TRANSFORM_DIRTY) {
                     auto uiRect = cocos2d::ui::Helper::convertBoundingBoxToScreen(_webView);
-                    JniHelper::callStaticVoidMethod(className, "setWebViewRect", _viewTag, 
+                    JniHelper::callStaticVoidMethod(className, "setWebViewRect", _viewTag,
                                                     (int)uiRect.origin.x, (int)uiRect.origin.y,
                                                     (int)uiRect.size.width, (int)uiRect.size.height);
                 }

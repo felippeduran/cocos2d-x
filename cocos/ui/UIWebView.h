@@ -1,18 +1,18 @@
 /****************************************************************************
  Copyright (c) 2014-2015 Chukong Technologies Inc.
- 
+
  http://www.cocos2d-x.org
- 
+
  Permission is hereby granted, free of charge, to any person obtaining a copy
  of this software and associated documentation files (the "Software"), to deal
  in the Software without restriction, including without limitation the rights
  to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
  copies of the Software, and to permit persons to whom the Software is
  furnished to do so, subject to the following conditions:
- 
+
  The above copyright notice and this permission notice shall be included in
  all copies or substantial portions of the Software.
- 
+
  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
  IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
  FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
@@ -43,11 +43,11 @@
 NS_CC_BEGIN
 namespace experimental{
     namespace ui{
-        
+
 class WebViewImpl;
 
 /**
- * @brief A View that displays web pages. 
+ * @brief A View that displays web pages.
  *
  * @note WebView displays web pages base on system widget.
  * It's mean WebView displays web pages above all graphical elements of cocos2d-x.
@@ -79,7 +79,7 @@ public:
                   const std::string &MIMEType,
                   const std::string &encoding,
                   const std::string &baseURL);
-    
+
     /**
      * Sets the main page content and base URL.
      *
@@ -145,6 +145,11 @@ public:
      * Set WebView should support zooming. The default value is false.
      */
     void setScalesPageToFit(const bool scalesPageToFit);
+
+    /**
+     * Set WebView transparent.
+     */
+    void setBackgroundColorClear();
     
     /**
      * Call before a web view begins loading.
@@ -153,7 +158,7 @@ public:
      * @return YES if the web view should begin loading content; otherwise, NO.
      */
     void setOnShouldStartLoading(const std::function<bool(WebView *sender, const std::string &url)>& callback);
-    
+
     /**
      * A callback which will be called when a WebView event happens.
      */
@@ -165,29 +170,29 @@ public:
      * @param callback The web view that has finished loading.
      */
     void setOnDidFinishLoading(const ccWebViewCallback& callback);
-    
+
     /**
      * Call if a web view failed to load content.
      *
      * @param callback The web view that has failed loading.
      */
     void setOnDidFailLoading(const ccWebViewCallback& callback);
-    
+
     /**
      * This callback called when load URL that start with javascript interface scheme.
      */
     void setOnJSCallback(const ccWebViewCallback& callback);
-    
+
     /**
      * Get the callback when WebView is about to start.
      */
     std::function<bool(WebView *sender, const std::string &url)> getOnShouldStartLoading()const;
-    
+
     /**
      * Get the callback when WebView has finished loading.
      */
     ccWebViewCallback getOnDidFinishLoading()const;
-    
+
     /**
      * Get the callback when WebView has failed loading.
      */
@@ -211,17 +216,17 @@ public:
     virtual void setVisible(bool visible) override;
     virtual void onEnter() override;
     virtual void onExit() override;
-    
+
 protected:
     virtual cocos2d::ui::Widget* createCloneInstance() override;
     virtual void copySpecialProperties(Widget* model) override;
-    
+
     std::function<bool(WebView *sender, const std::string &url)> _onShouldStartLoading;
-    
+
     ccWebViewCallback _onDidFinishLoading;
-    
+
     ccWebViewCallback _onDidFailLoading;
-   
+
     ccWebViewCallback _onJSCallback;
 
 CC_CONSTRUCTOR_ACCESS:
@@ -229,7 +234,7 @@ CC_CONSTRUCTOR_ACCESS:
      * Default constructor.
      */
     WebView();
-    
+
     /**
      * Default destructor.
      */
@@ -239,7 +244,7 @@ private:
     WebViewImpl *_impl;
     friend class WebViewImpl;
 };
-        
+
       } // namespace ui
    } // namespace experimental
 }//namespace cocos2d
