@@ -110,7 +110,15 @@ LanguageType Application::getCurrentLanguage()
 
     if (0 == strcmp("zh", pLanguageName))
     {
-        ret = LanguageType::CHINESE;
+        std::string languageFullName = JniHelper::callStaticStringMethod(helperClassName, "getCurrentLanguageFullName");
+        if (0 == strcmp(languageFullName.c_str(), "zh_CN"))
+        {
+            ret = LanguageType::CHINESE_SIMPLIFIED;
+        }
+        else
+        {
+            ret = LanguageType::CHINESE;
+        }
     }
     else if (0 == strcmp("en", pLanguageName))
     {
