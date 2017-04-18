@@ -25,6 +25,7 @@ THE SOFTWARE.
 #include "ui/UIText.h"
 #include "2d/CCLabel.h"
 #include "platform/CCFileUtils.h"
+#include <codecvt>
 
 NS_CC_BEGIN
 
@@ -116,6 +117,27 @@ void Text::setString(const std::string &text)
         return;
     }
     _labelRenderer->setString(text);
+    
+    //if any character trespasses last Latin Extended-A unicode, use system font
+    std::wstring_convert<std::codecvt_utf8<char32_t>, char32_t> conv;
+    std::u32string utf32str = conv.from_bytes(text);
+    
+    bool shouldChangeFont = false;
+    for (char32_t ch : utf32str) {
+        if (ch > _maxUnicodeRange || ch < _minUnicodeRange) { //017E == "ž"
+            shouldChangeFont = true;
+            break;
+        }
+    }
+    if (shouldChangeFont) {
+        if (_fontName != _fallbackFontName) {
+            _customFontName = _fontName;
+        }
+        this->setFontName(_fallbackFontName);
+    } else {
+        this->setFontName(_customFontName);
+    }
+    
     updateContentSizeWithTextureSize(_labelRenderer->getContentSize());
     _labelRendererAdaptDirty = true;
 }
@@ -156,6 +178,7 @@ void Text::setFontName(const std::string& name)
 {
     if(FileUtils::getInstance()->isFileExist(name))
     {
+        _customFontName = name;
         TTFConfig config = _labelRenderer->getTTFConfig();
         config.fontFilePath = name;
         config.fontSize = _fontSize;
@@ -439,6 +462,19 @@ void Text::copySpecialProperties(Widget *widget)
         }
     }
 }
+    
+    void Text::setMaxUnicodeRange(uint32_t range) {
+        _maxUnicodeRange = range;
+    }
+    void Text::setMinUnicodeRange(uint32_t range) {
+        _minUnicodeRange = range;
+    }
+    uint32_t Text::getMaxUnicodeRange() const {
+        return _maxUnicodeRange;
+    }
+    uint32_t Text::getMinUnicodeRange() const {
+        return _minUnicodeRange;
+    }
 
 }
 

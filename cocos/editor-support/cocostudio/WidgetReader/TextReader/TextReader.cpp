@@ -475,7 +475,7 @@ namespace cocostudio
 
         auto widgetReader = WidgetReader::getInstance();
         widgetReader->setPropsWithFlatBuffers(node, (Table*)options->widgetOptions());
-
+        
         // restore node color and set color to text to fix shadow & outline color won't show correct bug
         node->setColor(oldColor);
         auto optionsWidget = (WidgetOptions*)options->widgetOptions();
@@ -501,6 +501,7 @@ namespace cocostudio
         Text* text = Text::create();
         
         setPropsWithFlatBuffers(text, (Table*)textOptions);
+        text->setMaxUnicodeRange(0x017E);
         
         return text;
     }

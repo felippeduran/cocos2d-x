@@ -322,6 +322,11 @@ public:
     * Return current effect color value.
     */
     Color4B getEffectColor() const;
+    
+    void setMaxUnicodeRange(uint32_t range);
+    void setMinUnicodeRange(uint32_t range);
+    uint32_t getMaxUnicodeRange () const;
+    uint32_t getMinUnicodeRange () const;
 
 CC_CONSTRUCTOR_ACCESS:
     virtual bool init() override;
@@ -350,6 +355,11 @@ protected:
     Label* _labelRenderer;
     bool _labelRendererAdaptDirty;
     Type _type;
+    
+    std::string _fallbackFontName = "Arial";
+    std::string _customFontName;
+    uint32_t _minUnicodeRange = 0;
+    uint32_t _maxUnicodeRange = UINT_MAX;
 };
 
 }
