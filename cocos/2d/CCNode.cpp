@@ -1206,8 +1206,8 @@ uint32_t Node::processParentFlags(const Mat4& parentTransform, uint32_t parentFl
 
     // Fixes Github issue #16100. Basically when having two cameras, one camera might set as dirty the
     // node that is not visited by it, and might affect certain calculations. Besides, it is faster to do this.
-    if (!isVisitableByVisitingCamera())
-        return parentFlags;
+//    if (!isVisitableByVisitingCamera())
+//        return parentFlags;
 
     uint32_t flags = parentFlags;
     flags |= (_transformUpdated ? FLAGS_TRANSFORM_DIRTY : 0);
