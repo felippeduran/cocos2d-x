@@ -163,6 +163,12 @@ bool Layout::init()
     return false;
 }
     
+void Layout::setGlobalZOrder(float globalZOrder)
+{
+    Node::setGlobalZOrder(globalZOrder);
+    if (_clippingStencil) _clippingStencil->setGlobalZOrder(fabs(_globalZOrder) > FLT_EPSILON ? FLT_MIN : 0);
+}
+    
 void Layout::addChild(Node* child)
 {
     Layout::addChild(child, child->getLocalZOrder(), child->getTag());
@@ -267,13 +273,13 @@ void Layout::stencilClippingVisit(Renderer *renderer, const Mat4& parentTransfor
     
     renderer->pushGroup(_groupCommand.getRenderQueueID());
     
-    _beforeVisitCmdStencil.init(_globalZOrder);
+    _beforeVisitCmdStencil.init(fabs(_globalZOrder) > FLT_EPSILON ? FLT_MIN : 0);
     _beforeVisitCmdStencil.func = CC_CALLBACK_0(StencilStateManager::onBeforeVisit, _stencilStateManager);
     renderer->addCommand(&_beforeVisitCmdStencil);
     
     _clippingStencil->visit(renderer, _modelViewTransform, flags);
     
-    _afterDrawStencilCmd.init(_globalZOrder);
+    _afterDrawStencilCmd.init(fabs(_globalZOrder) > FLT_EPSILON ? FLT_MIN : 0);
     _afterDrawStencilCmd.func = CC_CALLBACK_0(StencilStateManager::onAfterDrawStencil, _stencilStateManager);
     renderer->addCommand(&_afterDrawStencilCmd);
     
@@ -321,7 +327,7 @@ void Layout::stencilClippingVisit(Renderer *renderer, const Mat4& parentTransfor
         (*it)->visit(renderer, _modelViewTransform, flags);
 
     
-    _afterVisitCmdStencil.init(_globalZOrder);
+    _afterVisitCmdStencil.init(fabs(_globalZOrder) > FLT_EPSILON ? FLT_MAX : 0);
     _afterVisitCmdStencil.func = CC_CALLBACK_0(StencilStateManager::onAfterVisit, _stencilStateManager);
     renderer->addCommand(&_afterVisitCmdStencil);
     
@@ -410,6 +416,7 @@ void Layout::setClippingEnabled(bool able)
                 }
                 _clippingStencil->retain();
                 setStencilClippingSize(_contentSize);
+                _clippingStencil->setGlobalZOrder(fabs(_globalZOrder) > FLT_EPSILON ? FLT_MIN : 0);
             }
             else
             {

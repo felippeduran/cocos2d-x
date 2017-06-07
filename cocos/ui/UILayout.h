@@ -460,6 +460,8 @@ public:
      * @param applyChildren If true call this function recursively from this node to its children.
      */
     virtual void setCameraMask(unsigned short mask, bool applyChildren = true) override;
+    
+    void setGlobalZOrder(float globalZOrder) override;
 
     ResourceData getRenderFile();
 
